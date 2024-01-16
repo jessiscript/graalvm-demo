@@ -40,6 +40,15 @@ public class Main {
         GameOfLife game = new GameOfLife(dimensions, pattern, a.periodMilliseconds, gridChannel);
         game.start();
 
+        int R = dimensions.rows();
+        int C = dimensions.cols();
+        int totalProcesses = R * C + 2;
+        int totalChannels = 2 * (C - 1) * R + 2 * (R - 1) * C + 4 * (R - 1) * (C - 1) + R * C * 2 + 1;
+        Consumer<boolean[][]> consumer = a.enableBenchmark ? new CountingOutput(totalProcesses, totalChannels) : new ConsoleOutput(dimensions, totalProcesses, totalChannels);
+
+        while (true) {
+            consumer.accept(gridChannel.take());
+        }
     }
 
 }
