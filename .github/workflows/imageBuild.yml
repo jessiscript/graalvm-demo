@@ -13,7 +13,7 @@ jobs:
       - uses: jessiscript/setup-graalvm@main
         with:
           java-version: '21'
-          distribution: 'graalvm'
+          distribution: 'graalvm-community'
           github-token: ${{ secrets.GITHUB_TOKEN }}
           native-image-job-reports: 'true'
           native-image-pr-comparison: 'true'
@@ -28,9 +28,6 @@ jobs:
 
       - name: Build and run game of life
         run: mvn -Pnative package
-
-      - name: Build native image
-        run: native-image -cp target\game-of-life gameoflife.Main
 
       - name: Upload binary
         uses: actions/upload-artifact@v2
