@@ -36,6 +36,10 @@ public class Main {
 
         Channel<boolean[][]> gridChannel = new Channel<>(); // channel carries aggregated liveness matrices
         Dimensions dimensions = new Dimensions(pattern.length, pattern[0].length);
+
+        GameOfLife game = new GameOfLife(dimensions, pattern, a.periodMilliseconds, gridChannel);
+        game.start();
+
     }
 
 }
