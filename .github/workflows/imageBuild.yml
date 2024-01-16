@@ -29,9 +29,6 @@ jobs:
       - name: Build and run game of life
         run: mvn -Pnative package
 
-      - name: Build native image
-        run: native-image -cp target\game-of-life-1.0.0-SNAPSHOT.jar gameoflife.Main
-
       - name: Upload binary
         uses: actions/upload-artifact@v2
         with:
