@@ -4,6 +4,9 @@ jobs:
   build:
     name: Native image on ubuntu-latest
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./game-of-life-native
     steps:
       - uses: actions/checkout@v4
 
@@ -16,15 +19,21 @@ jobs:
           native-image-pr-comparison: 'true'
           native-image-pr-comparison-parameter: 'analysis results, resource usage'
 
-      - name: Build and run HelloWorld.java
+      - name: Get versions
         run: |
-          echo 'public class HelloWorld { public static void main(String[] args) { System.out.println("Hello, World!"); } }' > HelloWorld.java
-          javac HelloWorld.java
-          native-image HelloWorld
-          ./helloworld
+            echo "GRAALVM_HOME: $GRAALVM_HOME"
+            echo "JAVA_HOME: $JAVA_HOME"
+            java --version
+            native-image --version
+
+      - name: Build and run game of life
+        run: mvn -Pnative package
+
+      - name: Build native image
+        run: native-image -cp target\game-of-life-1.0.0-SNAPSHOT.jar gameoflife.Main
 
       - name: Upload binary
         uses: actions/upload-artifact@v2
         with:
           name: nativeImage-ubuntu-latest
-          path: helloworld*
+          path: gameoflife.Main
