@@ -33,6 +33,9 @@ public class Main {
         boolean[][] original = PatternParser.parseFile(a.patternFile);
         boolean[][] rotated = a.rotate ? PatternParser.rotate(original) : original;
         boolean[][] pattern = PatternParser.pad(rotated, a.leftPadding, a.topPadding, a.rightPadding, a.bottomPadding);
+
+        Channel<boolean[][]> gridChannel = new Channel<>(); // channel carries aggregated liveness matrices
+
     }
 
 }
