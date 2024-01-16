@@ -46,9 +46,11 @@ public class Main {
         int totalChannels = 2 * (C - 1) * R + 2 * (R - 1) * C + 4 * (R - 1) * (C - 1) + R * C * 2 + 1;
         Consumer<boolean[][]> consumer = a.enableBenchmark ? new CountingOutput(totalProcesses, totalChannels) : new ConsoleOutput(dimensions, totalProcesses, totalChannels);
 
+        new WindowOutput(200, 100, false);
         while (true) {
             consumer.accept(gridChannel.take());
         }
+
     }
 
 }
