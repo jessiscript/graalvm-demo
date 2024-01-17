@@ -42,6 +42,10 @@ def load_data(repo_path, n, branch_name, metrics_type):
             #skip as no build was created
             continue
     
+    # If there are no references return None
+    if len(metrics_commits) == 0:
+        return None
+
     blob_data = map(get_blob_data, metrics_refs)
 
     # Extract commit dates, messages, and shas for plotting

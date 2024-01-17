@@ -39,6 +39,9 @@ def main():
     try:  
         n = int(n)  
         build_data = load_data(repo_path, n, branch, metrics_type)
+        if build_data is None:
+            print("No metrics references could be found. Make sure to run 'git fetch origin refs/graalvm-metrics/*:refs/graalvm-metrics/*' first.")
+            exit()
         plot_data(build_data, branch, metrics_type)         
 
     except Exception as e: 
