@@ -1,0 +1,5 @@
+pygit2==1.13.3
+pandas==2.1.4
+datetime3==3.8.0
+argparse3==0.0.0
+plotly==5.18.0
