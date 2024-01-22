@@ -1,12 +1,17 @@
 from datetime import datetime
 import plotly.graph_objects as go
 import plotly.subplots as sp
-import plotly.express as px
+import os
 
 def plot_data(build_data, branch, metrics_type):
     '''Creates plotly graph as html file. Requires the build data as pandas data frames as well as user's arguments.'''
     # Get current date and time
     current_datetime = datetime.now().strftime('%Y%m%d_%H%M%S')
+
+    # Check if the "output" folder exists, and create it if not
+    output_folder = "output"
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
 
     # Distinguish between different metrics types to be plotted
     if metrics_type == "image_details":
