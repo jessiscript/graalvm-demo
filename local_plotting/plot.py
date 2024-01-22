@@ -1,6 +1,7 @@
 from datetime import datetime
 import plotly.graph_objects as go
 import plotly.subplots as sp
+import plotly.express as px
 
 def plot_data(build_data, branch, metrics_type):
     '''Creates plotly graph as html file. Requires the build data as pandas data frames as well as user's arguments.'''
@@ -12,22 +13,23 @@ def plot_data(build_data, branch, metrics_type):
 
         fig = go.Figure()
 
-        # Add traces for teach dataset
-        fig.add_trace(go.Scatter(x=build_data["Commit Date"], y=build_data["Image Size"], mode='markers', name='Image Size', text=build_data[["Commit Message", "Commit Sha"]].values))
-        fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Commit Time:</b> %{x}<br><b>Total Image Size (MB):</b> %{y}')
+        # Add bar segment for each dataset
+        fig.add_trace(go.Bar(x=build_data["Commit Date"], y=build_data["Code Area Size"], name='Code Area Size', text=build_data[["Commit Message", "Commit Sha"]].values))
+        fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Commit Time:</b> %{x}<br><b>Size (MB):</b> %{y}')
 
-        fig.add_trace(go.Scatter(x=build_data["Commit Date"], y=build_data["Code Area Size"], mode='markers', name='Code Area Size', text=build_data[["Commit Message", "Commit Sha"]].values))
-        fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Commit Time:</b> %{x}<br><b>Code Area Size (MB):</b> %{y}')
+        fig.add_trace(go.Bar(x=build_data["Commit Date"], y=build_data["Image Heap Size"], name='Image Heap Size', text=build_data[["Commit Message", "Commit Sha"]].values))
+        fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Commit Time:</b> %{x}<br><b>Size (MB):</b> %{y}')
 
-        fig.add_trace(go.Scatter(x=build_data["Commit Date"], y=build_data["Image Heap Size"], mode='markers', name='Image Heap Size', text=build_data[["Commit Message", "Commit Sha"]].values))
-        fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Commit Time:</b> %{x}<br><b>Image Heao Size (MB):</b> %{y}')
-
-        fig.add_trace(go.Scatter(x=build_data["Commit Date"], y=build_data["Other"], mode='markers', name='Other', text=build_data[["Commit Message", "Commit Sha"]].values))
-        fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Commit Time:</b> %{x}<br><b>Other (MB):</b> %{y}')
+        fig.add_trace(go.Bar(x=build_data["Commit Date"], y=build_data["Other"], name='Other', text=build_data[["Commit Message", "Commit Sha"]].values))
+        fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Commit Time:</b> %{x}<br><b>Size (MB):</b> %{y}')
         
         # Customize layout
-        y_range = [-1, max(build_data["Image Size"]) + 1] 
-        fig.update_layout(title='Native Image Size History of Branch: ' + '\'' + branch +'\'', xaxis_title='Commit Dates', yaxis_title='Size in MB', yaxis=dict(range=y_range))
+        y_range = [0, max(build_data["Code Area Size"] + build_data["Image Heap Size"] + build_data["Other"]) + 1] 
+        fig.update_layout(title='Native Image Size History of Branch: ' + '\'' + branch +'\'', 
+                          xaxis_title='Commit Dates', 
+                          yaxis_title='Size in MB', 
+                          yaxis=dict(range=y_range), 
+                          barmode='stack')
 
         # Show the interactive plot and save to html
         fig.show()
