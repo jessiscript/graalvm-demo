@@ -52,25 +52,27 @@ def load_data(repo_path, n, branch_name, metrics_type):
     commit_dates = []
     commit_messages = []
     commit_shas = []
+    commit_author = []
     for commit in metrics_commits:
         tzinfo  = timezone( timedelta(minutes=commit.author.offset) )
         dt = datetime.fromtimestamp(float(commit.author.time), tzinfo)
         commit_dates.append(dt.strftime('%d.%m.%y, %H:%M'))
         commit_messages.append(commit.message.strip())
         commit_shas.append(str(commit.id))
+        commit_author.append(str(commit.author))
    
     data_frame = None
 
     if metrics_type == "image_details":
-        data_frame = create_image_details_data_frame(blob_data, commit_dates, commit_shas, commit_messages)
+        data_frame = create_image_details_data_frame(blob_data, commit_dates, commit_shas, commit_messages, commit_author)
     elif metrics_type == "analysis_results":
-        data_frame = create_analysis_results_data_frames(blob_data, commit_dates, commit_shas, commit_messages)
+        data_frame = create_analysis_results_data_frames(blob_data, commit_dates, commit_shas, commit_messages, commit_author)
     elif metrics_type == "resource_usage":
-        data_frame = create_resources_data_frame(blob_data, commit_dates, commit_shas, commit_messages)
+        data_frame = create_resources_data_frame(blob_data, commit_dates, commit_shas, commit_messages, commit_author)
 
     return data_frame
 
-def create_image_details_data_frame(blob_data, commit_dates, commit_shas, commit_messages):
+def create_image_details_data_frame(blob_data, commit_dates, commit_shas, commit_messages, commit_author):
     '''Creates pandas data frame for native image details.'''
 
     #Filter for relevant metrics data
@@ -89,21 +91,22 @@ def create_image_details_data_frame(blob_data, commit_dates, commit_shas, commit
                                 "Image Heap Size": image_heap_sizes,
                                 "Other": other,
                                 "Commit Sha": commit_shas,
-                                "Commit Message": commit_messages
+                                "Commit Message": commit_messages,
+                                "Commit Author": commit_author
     })
 
-def create_analysis_results_data_frames(blob_data, commit_dates, commit_shas, commit_messages):
+def create_analysis_results_data_frames(blob_data, commit_dates, commit_shas, commit_messages, commit_author):
     '''Returns an array of pandas data frames for the visualization of native image build analysis results.'''
 
     raw_analysis_results = [get_metrics(entry, "analysis_results") for entry in blob_data]
-    types_data = create_single_ar_data_frame(raw_analysis_results, "types", commit_dates, commit_shas, commit_messages,)
-    methods_data = create_single_ar_data_frame(raw_analysis_results, "methods", commit_dates, commit_shas, commit_messages)
-    classes_data = create_single_ar_data_frame(raw_analysis_results, "classes", commit_dates, commit_shas, commit_messages)
-    fields_data = create_single_ar_data_frame(raw_analysis_results, "fields", commit_dates, commit_shas, commit_messages)
+    types_data = create_single_ar_data_frame(raw_analysis_results, "types", commit_dates, commit_shas, commit_messages, commit_author)
+    methods_data = create_single_ar_data_frame(raw_analysis_results, "methods", commit_dates, commit_shas, commit_messages, commit_author)
+    classes_data = create_single_ar_data_frame(raw_analysis_results, "classes", commit_dates, commit_shas, commit_messages, commit_author)
+    fields_data = create_single_ar_data_frame(raw_analysis_results, "fields", commit_dates, commit_shas, commit_messages, commit_author)
 
     return [types_data, methods_data, classes_data, fields_data]
 
-def create_single_ar_data_frame(analysis_results, aspect, commit_dates, commit_shas, commit_messages):
+def create_single_ar_data_frame(analysis_results, aspect, commit_dates, commit_shas, commit_messages, commit_author):
     '''Returns a single data frame. Requires the analysis_results json, the name of the aspect (types, classes, methods, fields), and the commit_dates.'''
 
     aspect_container = [entry.get(aspect) for entry in analysis_results]
@@ -118,10 +121,11 @@ def create_single_ar_data_frame(analysis_results, aspect, commit_dates, commit_s
                             "JNI": jni,
                             "Reachable": reachable,
                             "Commit Sha": commit_shas,
-                            "Commit Message": commit_messages
+                            "Commit Message": commit_messages,
+                            "Commit Author": commit_author
     })
 
-def create_resources_data_frame(blob_data, commit_dates, commit_shas, commit_messages):
+def create_resources_data_frame(blob_data, commit_dates, commit_shas, commit_messages, commit_author):
     '''Creates pandas data frame for native image details.'''
 
     raw_resources_data = [get_metrics(entry, "resource_usage") for entry in blob_data]
@@ -143,5 +147,6 @@ def create_resources_data_frame(blob_data, commit_dates, commit_shas, commit_mes
                             "CPU Load": load,
                             "Total Cores": total_cores,
                             "Commit Sha": commit_shas,
-                            "Commit Message": commit_messages
+                            "Commit Message": commit_messages,
+                            "Commit Author": commit_author
     })

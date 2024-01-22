@@ -17,16 +17,15 @@ def plot_data(build_data, branch, metrics_type):
     if metrics_type == "image_details":
 
         fig = go.Figure()
+        hover_data = build_data[["Commit Message", "Commit Sha", "Commit Author"]].values
 
         # Add bar segment for each dataset
-        fig.add_trace(go.Bar(x=build_data["Commit Date"], y=build_data["Code Area Size"], name='Code Area Size', text=build_data[["Commit Message", "Commit Sha"]].values))
-        fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Commit Time:</b> %{x}<br><b>Size (MB):</b> %{y}')
-
-        fig.add_trace(go.Bar(x=build_data["Commit Date"], y=build_data["Image Heap Size"], name='Image Heap Size', text=build_data[["Commit Message", "Commit Sha"]].values))
-        fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Commit Time:</b> %{x}<br><b>Size (MB):</b> %{y}')
-
-        fig.add_trace(go.Bar(x=build_data["Commit Date"], y=build_data["Other"], name='Other', text=build_data[["Commit Message", "Commit Sha"]].values))
-        fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Commit Time:</b> %{x}<br><b>Size (MB):</b> %{y}')
+        fig.add_trace(go.Bar(x=build_data["Commit Date"], y=build_data["Code Area Size"], name='Code Area Size', text=hover_data))
+        fig.add_trace(go.Bar(x=build_data["Commit Date"], y=build_data["Image Heap Size"], name='Image Heap Size', text=hover_data))
+        fig.add_trace(go.Bar(x=build_data["Commit Date"], y=build_data["Other"], name='Other', text=hover_data))
+        
+        # Add hovertemplate
+        fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Author:</b> %{text[2]}<br><b>Commit Time:</b> %{x}<br><b>Size (MB):</b> %{y}')
         
         # Customize layout
         y_range = [0, max(build_data["Code Area Size"] + build_data["Image Heap Size"] + build_data["Other"]) + 1] 
@@ -68,25 +67,26 @@ def plot_data(build_data, branch, metrics_type):
     elif metrics_type == "resource_usage":
         # Create subplot grid with 2 rows and 2 columns
         fig = sp.make_subplots(rows=2, cols=2, subplot_titles=['GC Time', 'GC Count', 'Peak RSS', 'CPU Load'])
+        hover_template_prefix = '<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Author:</b> %{text[2]}<br><b>Commit Time:</b> %{x}<br>'
 
         # Create traces 
         trace1 = go.Scatter(x=build_data["Commit Date"], y=build_data["GC Time"], mode='markers', 
-                            name='GC Time', text=build_data[["Commit Message", "Commit Sha"]].values)
+                            name='GC Time', text=build_data[["Commit Message", "Commit Sha", "Commit Author"]].values)
         trace2 = go.Scatter(x=build_data["Commit Date"], y=build_data["GC Count"], mode='markers', 
-                            name='GC Count', text=build_data[["Commit Message", "Commit Sha"]].values)
+                            name='GC Count', text=build_data[["Commit Message", "Commit Sha", "Commit Author"]].values)
         trace3 = go.Scatter(x=build_data["Commit Date"], y=build_data["Peak RSS"], mode='markers', 
-                            name='Peak RSS', text=build_data[["Commit Message", "Commit Sha"]].values)
+                            name='Peak RSS', text=build_data[["Commit Message", "Commit Sha", "Commit Author"]].values)
         trace4 = go.Scatter(x=build_data["Commit Date"], y=build_data["CPU Load"], mode='markers', 
-                            name='CPU Load', text=build_data[["Commit Message", "Commit Sha", "Total Cores"]].values)
+                            name='CPU Load', text=build_data[["Commit Message", "Commit Sha", "Commit Author", "Total Cores"]].values)
         
         fig.add_trace(trace1, row=1, col=1)
-        fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Commit Time:</b> %{x}<br><b>GC Time (s):</b> %{y}', row=1, col=1)
+        fig.update_traces(hovertemplate= hover_template_prefix + '<b>GC Time (s):</b> %{y}', row=1, col=1)
         fig.add_trace(trace2, row=1, col=2)
-        fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Commit Time:</b> %{x}<br><b>GC Count:</b> %{y}', row=1, col=2)
+        fig.update_traces(hovertemplate= hover_template_prefix +  '<b>GC Count:</b> %{y}', row=1, col=2)
         fig.add_trace(trace3, row=2, col=1)
-        fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Commit Time:</b> %{x}<br><b>Peak RSS (MB):</b> %{y}', row=2, col=1)
+        fig.update_traces(hovertemplate= hover_template_prefix + '<b>Peak RSS (MB):</b> %{y}', row=2, col=1)
         fig.add_trace(trace4, row=2, col=2)
-        fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Commit Time:</b> %{x}<br><b>CPU Load:</b> %{y}<br><b>Total Cores:</b> %{text[2]}', row=2, col=2)
+        fig.update_traces(hovertemplate= hover_template_prefix + '<b>CPU Load:</b> %{y}<br><b>Total Cores:</b> %{text[3]}', row=2, col=2)
 
         # Update y-axis range for each subplot
         fig.update_yaxes(range=[-0.5, max(build_data["GC Time"]) + 1], title_text="GC Time (s)", row=1, col=1)
@@ -107,15 +107,17 @@ def create_analysis_results_subplot(fig, index, build_data):
     # Define colors for the traces
     colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']
 
+    hover_data = build_data[index][["Commit Message", "Commit Sha", "Commit Author"]].values
+
     # Create traces 
     trace1_1 = go.Scatter(x=build_data[index]["Commit Date"], y=build_data[index]["Total"], mode='markers', 
-                          name='Total', marker=dict(color=colors[0]), text=build_data[index][["Commit Message", "Commit Sha"]].values)
+                          name='Total', marker=dict(color=colors[0]), text=hover_data)
     trace1_2 = go.Scatter(x=build_data[index]["Commit Date"], y=build_data[index]["Reflection"], mode='markers', 
-                          name='Reflection', marker=dict(color=colors[1]), text=build_data[index][["Commit Message", "Commit Sha"]].values)
+                          name='Reflection', marker=dict(color=colors[1]), text=hover_data)
     trace1_3 = go.Scatter(x=build_data[index]["Commit Date"], y=build_data[index]["JNI"], mode='markers', 
-                          name='JNI', marker=dict(color=colors[2]), text=build_data[index][["Commit Message", "Commit Sha"]].values)
+                          name='JNI', marker=dict(color=colors[2]), text=hover_data)
     trace1_4 = go.Scatter(x=build_data[index]["Commit Date"], y=build_data[index]["Reachable"], mode='markers', 
-                          name='Reachable', marker=dict(color=colors[3]), text=build_data[index][["Commit Message", "Commit Sha"]].values)
+                          name='Reachable', marker=dict(color=colors[3]), text=hover_data)
 
     # Determine row and col given index
     row = 1 if index < 2 else 2
@@ -134,4 +136,4 @@ def create_analysis_results_subplot(fig, index, build_data):
         fig.update_traces(showlegend=False, row=row, col=col)
 
     # Add hovertemplate
-    fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Commit Time:</b> %{x}<br><b>Amount:</b> %{y}')
+    fig.update_traces(hovertemplate='<b>Commit Message:</b> %{text[0]}<br><b>Commit Sha:</b> %{text[1]}<br><b>Author:</b> %{text[2]}<br><b>Commit Time:</b> %{x}<br><b>Amount:</b> %{y}')
