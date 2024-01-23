@@ -78,7 +78,7 @@
                                 <arg>--gc=serial</arg>
                                 <arg>-O2</arg>
                                 <arg>--pgo</arg>
-                                <arg>--enable-monitoring=heapdump</arg>
+                                <arg>--enable-monitoring=jfr</arg>
                                 <!-- <arg>- -pgo=${project.basedir}/default.iprof</arg> -->
                             </buildArgs>
                         </configuration>
