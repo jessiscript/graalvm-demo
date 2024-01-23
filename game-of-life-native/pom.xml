@@ -75,7 +75,7 @@
                             <buildArgs>
                                 <arg>--enable-preview</arg>
                                 <arg>--install-exit-handlers</arg>
-                                <arg>--gc=G1</arg>
+                                <arg>--gc=epsilon</arg>
                                 <!-- <arg>- -pgo-instrument</arg> -->
                                 <!-- <arg>- -pgo=${project.basedir}/default.iprof</arg> -->
                             </buildArgs>
