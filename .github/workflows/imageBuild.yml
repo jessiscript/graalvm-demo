@@ -33,4 +33,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: nativeImage-ubuntu-latest
-          path: target\game-of-life.exe
+          path: D:\a\graalvm-demo\graalvm-demo\game-of-life-native\target\game-of-life.exe
