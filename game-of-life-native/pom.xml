@@ -46,6 +46,7 @@
                             <buildArgs>
                                 <arg>--enable-preview</arg>
                                 <arg>--install-exit-handlers</arg>
+                                <arg>--gc=G1</arg>
                             </buildArgs>
                         </configuration>
                     </plugin>
