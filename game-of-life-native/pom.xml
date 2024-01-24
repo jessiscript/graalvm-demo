@@ -46,6 +46,8 @@
                             <buildArgs>
                                 <arg>--enable-preview</arg>
                                 <arg>--install-exit-handlers</arg>
+                                <arg>--gc=epsilon</arg>
+                                <arg>-O2</arg>
                             </buildArgs>
                         </configuration>
                     </plugin>
@@ -75,8 +77,11 @@
                             <buildArgs>
                                 <arg>--enable-preview</arg>
                                 <arg>--install-exit-handlers</arg>
-                                <arg>--gc=G1</arg>
-                                <!-- <arg>- -pgo-instrument</arg> -->
+                                <arg>--gc=serial</arg>
+                                <arg>-O2</arg>
+                                <arg>--pgo</arg>
+                                <arg>--enable-monitoring=all</arg>
+                                <arg>--static</arg>
                                 <!-- <arg>- -pgo=${project.basedir}/default.iprof</arg> -->
                             </buildArgs>
                         </configuration>

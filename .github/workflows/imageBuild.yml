@@ -3,7 +3,7 @@ on: [push, pull_request]
 jobs:
   build:
     name: Native image on ubuntu-latest
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     defaults:
       run:
         working-directory: ./game-of-life-native
@@ -17,7 +17,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           native-image-job-reports: 'true'
           native-image-pr-comparison: 'true'
-          native-image-pr-comparison-parameter: 'analysis results, resource usage'
+          native-image-pr-comparison-parameter: 'analysis results, resource usage, image details'
 
       - name: Get versions
         run: |
@@ -33,4 +33,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: nativeImage-ubuntu-latest
-          path: target/*.jar
+          path: D:\a\graalvm-demo\graalvm-demo\game-of-life-native\target\game-of-life.exe
