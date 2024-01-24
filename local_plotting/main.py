@@ -15,7 +15,7 @@ Example: python3 main.py . test_branch 40 image_details
             -> creates image_details_{time}.html file
 '''
 
-def parse_args():
+def add_args():
     parser = argparse.ArgumentParser(description="Visualize local native image build data from last n GitHub commits using setup-graalvm action.")
     parser.add_argument("repo_path", help="Path to your GitHub repository")
     parser.add_argument("branch", help="Name of the branch")
@@ -25,7 +25,7 @@ def parse_args():
     return parser.parse_args()
 
 def main():
-    args = parse_args()
+    args = add_args()
     
     repo_path = args.repo_path
     branch = args.branch
