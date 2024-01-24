@@ -18,7 +18,6 @@ jobs:
           native-image-job-reports: 'true'
           native-image-pr-comparison: 'true'
           native-image-pr-comparison-parameter: 'analysis results, resource usage, image details'
-          native-image-musl: 'true'
 
       - name: Get versions
         run: |
