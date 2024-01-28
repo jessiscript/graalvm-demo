@@ -49,6 +49,7 @@
                                 <arg>--gc=serial</arg>
                                 <arg>-O2</arg>
                                 <arg>--pgo</arg>
+                                <arg>--enable-monitoring=heapdump</arg>
                             </buildArgs>
                         </configuration>
                     </plugin>
