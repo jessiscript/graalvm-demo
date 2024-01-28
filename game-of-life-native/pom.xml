@@ -49,7 +49,7 @@
                                 <arg>--gc=serial</arg>
                                 <arg>-O2</arg>
                                 <arg>--pgo</arg>
-                                <arg>--enable-monitoring=heapdump</arg>
+                                <arg>--enable-monitoring=jmx</arg>
                             </buildArgs>
                         </configuration>
                     </plugin>
