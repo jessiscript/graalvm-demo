@@ -48,7 +48,7 @@
                                 <arg>--install-exit-handlers</arg>
                                 <arg>--gc=serial</arg>
                                 <arg>-O2</arg>
-                                <arg>--pgo-instrument</arg>
+                                <arg>--pgo</arg>
                             </buildArgs>
                         </configuration>
                     </plugin>
