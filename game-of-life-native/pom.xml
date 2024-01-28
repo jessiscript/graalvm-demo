@@ -46,7 +46,7 @@
                             <buildArgs>
                                 <arg>--enable-preview</arg>
                                 <arg>--install-exit-handlers</arg>
-                                <arg>--gc=G1</arg>
+                                <arg>--gc=epsilon</arg>
                             </buildArgs>
                         </configuration>
                     </plugin>
