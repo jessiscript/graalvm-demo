@@ -47,6 +47,7 @@
                                 <arg>--enable-preview</arg>
                                 <arg>--install-exit-handlers</arg>
                                 <arg>--gc=serial</arg>
+                                <arg>-Ob</arg>
                             </buildArgs>
                         </configuration>
                     </plugin>
