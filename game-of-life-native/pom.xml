@@ -48,7 +48,7 @@
                                 <arg>--install-exit-handlers</arg>
                                 <arg>--gc=serial</arg>
                                 <arg>-O2</arg>
-                                <arg>--enable-monitoring=heapdump</arg>
+                                <arg>--enable-monitoring=jfr</arg>
                             </buildArgs>
                         </configuration>
                     </plugin>
